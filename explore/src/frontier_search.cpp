@@ -60,16 +60,19 @@ std::vector<Frontier> FrontierSearch::searchFrom(geometry_msgs::Point position)
   visited_flag[bfs.front()] = true;
 
   while (!bfs.empty()) {
+    ROS_INFO("NOT EMPTY");
     unsigned int idx = bfs.front();
     bfs.pop();
 
     // iterate over 4-connected neighbourhood
     for (unsigned nbr : nhood4(idx, *costmap_)) {
+
       // add to queue all free, unvisited cells, use descending search in case
       // initialized on non-free cell
       if (map_[nbr] <= map_[idx] && !visited_flag[nbr]) {
         visited_flag[nbr] = true;
         bfs.push(nbr);
+        ROS_INFO("*");
         // check if cell is new frontier cell (unvisited, NO_INFORMATION, free
         // neighbour)
       } else if (isNewFrontierCell(nbr, frontier_flag)) {
@@ -78,6 +81,7 @@ std::vector<Frontier> FrontierSearch::searchFrom(geometry_msgs::Point position)
         if (new_frontier.size * costmap_->getResolution() >=
             min_frontier_size_) {
           frontier_list.push_back(new_frontier);
+          ROS_INFO("#");
         }
       }
     }

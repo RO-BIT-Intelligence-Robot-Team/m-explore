@@ -81,7 +81,6 @@ Explore::Explore()
   ROS_INFO("Waiting to connect to move_base server");
   move_base_client_.waitForServer();
   ROS_INFO("Connected to move_base server");
-
   exploring_timer_ =
       relative_nh_.createTimer(ros::Duration(1. / planner_frequency_),
                                [this](const ros::TimerEvent&) { makePlan(); });
@@ -174,12 +173,15 @@ void Explore::visualizeFrontiers(
 
   last_markers_count_ = current_markers_count;
   marker_array_publisher_.publish(markers_msg);
+  ROS_ERROR("AA");
 }
 
 void Explore::makePlan()
 {
+  ROS_ERROR("BB");
   // find frontiers
   auto pose = costmap_client_.getRobotPose();
+  std::cout<<"pose: "<< pose <<std::endl;
   // get frontiers sorted according to cost
   auto frontiers = search_.searchFrom(pose.position);
   ROS_DEBUG("found %lu frontiers", frontiers.size());
@@ -187,10 +189,11 @@ void Explore::makePlan()
     ROS_DEBUG("frontier %zd cost: %f", i, frontiers[i].cost);
   }
 
-  if (frontiers.empty()) {
-    stop();
-    return;
-  }
+//  if (frontiers.empty()) {
+//    ROS_ERROR("STOP");
+//    stop();
+//    return;
+//  }
 
   // publish frontiers as visualization markers
   if (visualize_) {

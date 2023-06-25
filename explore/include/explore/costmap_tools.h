@@ -111,10 +111,12 @@ bool nearestCell(unsigned int& result, unsigned int start, unsigned char val,
   while (!bfs.empty()) {
     unsigned int idx = bfs.front();
     bfs.pop();
-
+    std::cout<<"map : "<<(int)map[idx]<<std::endl;
     // return if cell of correct value is found
-    if (map[idx] == val) {
+    //if (map[idx] == val) {                  //for gmapping
+    if (map[idx] == val || map[idx] < 30) { //for cartographer
       result = idx;
+
       return true;
     }
 
